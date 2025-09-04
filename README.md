@@ -2,7 +2,7 @@
 
 An AI-powered email reply generation service built with Spring Boot, featuring JWT authentication, rate limiting, and intelligent data masking for sensitive information.
 
-## 🚀 Live Demo
+## 🚀 Live Demo(Use Postman or equivalent to see the service , directly landing on the link will show unauthorized 401 error) and it is on free tier so it may take 5-7 minutes to activate the service
 **Base URL**: `https://smart-email-reply-generator-backend.onrender.com`
 
 ## 🌟 Features
