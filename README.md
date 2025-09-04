@@ -1,170 +1,350 @@
-# Smart Email Reply Generator API 📧✨
+# Smart Email Reply Generator - Backend Service
 
-This project is a secure, AI-powered backend service built with **Spring Boot** that generates intelligent, context-aware email replies. It leverages the **Google Gemini API** for content generation and includes robust security features like JWT authentication, rate limiting, and automatic PII (Personally Identifiable Information) data masking.
+An AI-powered email reply generation service built with Spring Boot, featuring JWT authentication, rate limiting, and intelligent data masking for sensitive information.
 
-The live API is deployed on Render: `https://smart-email-reply-generator-backend.onrender.com`
+## 🚀 Live Demo
+**Base URL**: `https://smart-email-reply-generator-backend.onrender.com`
 
----
+## 🌟 Features
 
-## 🚀 Core Features
+### 🔐 **Authentication & Security**
+- JWT-based authentication system
+- BCrypt password encryption
+- Email domain validation (Gmail & Yahoo only)
+- CORS configuration for cross-origin requests
+- Comprehensive data masking for sensitive information
 
-* **🤖 AI-Powered Replies**: Integrates with the Google Gemini API to generate high-quality email replies based on user-provided content and desired tone.
-* **🔐 Secure JWT Authentication**: Implements user registration and login with JSON Web Tokens (JWT) to secure all sensitive endpoints.
-* **🛡️ Rate Limiting**: Protects the API from abuse with per-user rate limiting on both login attempts (10/day) and email generation requests (4/minute), powered by Resilience4j.
-* **🎭 PII Data Masking**: Automatically detects and masks sensitive data (emails, phone numbers, credit cards, etc.) before sending it to the AI model and unmasks the response, ensuring user privacy and security.
-* **🩺 Health Monitoring**: Includes Spring Boot Actuator endpoints (`/actuator/health`, `/actuator/info`) for easy monitoring and health checks.
-* **🛠️ Built with Spring Boot**: A robust and scalable backend built on the industry-standard Spring Boot framework with Spring Data JPA and PostgreSQL.
+### 🤖 **AI-Powered Email Generation**
+- Integration with Google Gemini 2.0 Flash AI model
+- Customizable email tone (formal, urgent, professional, etc.)
+- Context-aware email reply generation
+- Intelligent handling of business communications
 
----
+### 🛡️ **Data Protection**
+- **Automatic Data Masking** for:
+  - Email addresses
+  - Phone numbers
+  - Credit card numbers
+  - Aadhaar numbers
+  - PAN numbers
+  - Passwords
+  - Date of birth
+- Data is masked before AI processing and unmasked in responses
 
-## 🛠️ Tech Stack
+### ⚡ **Rate Limiting**
+- **Login Protection**: 10 attempts per day per user
+- **Email Generation**: 4 requests per minute per user
+- Powered by Resilience4j
 
-* **Backend**: Java, Spring Boot, Spring Security, Spring Data JPA
-* **Database**: PostgreSQL
-* **Authentication**: JSON Web Tokens (JWT)
-* **AI**: Google Gemini API
-* **Rate Limiting**: Resilience4j
-* **API Testing**: Postman
+### 📊 **Monitoring & Health Checks**
+- Spring Boot Actuator integration
+- Health check endpoints
+- Application info endpoints
 
----
+## 🛠️ Technology Stack
 
-## ⚙️ Setup and Installation
+- **Framework**: Spring Boot 3.x
+- **Security**: Spring Security with JWT
+- **Database**: MySQL/PostgreSQL with JPA/Hibernate
+- **AI Integration**: Google Gemini AI API
+- **Rate Limiting**: Resilience4j
+- **Documentation**: OpenAPI/Swagger ready
+- **Deployment**: Render.com
 
-To get a local copy up and running, follow these steps.
+## 📋 Prerequisites
 
-### **Prerequisites**
+- Java 17 or higher
+- PostgreSQL database
+- Google Gemini API key
+- Maven 3.6+
 
-* Java Development Kit (JDK) 17 or higher
-* Maven or Gradle
-* A PostgreSQL database instance
+## ⚙️ Environment Variables
 
-### **Installation**
+Create a `.env` file or set the following environment variables:
 
-1.  **Clone the repository**
-    ```sh
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    ```
-2.  **Navigate to the project directory**
-    ```sh
-    cd your-repo-name
-    ```
-3.  **Configure Environment Variables**
+```env
+# Database Configuration
+DB_URL=jdbc:postgresql://your-database-host:5432/your-database
+DB_USER=your-database-username
+DB_PASS=your-database-password
 
-    Create an `application.properties` file (or use environment variables) with the following content. Replace the `${...}` placeholders with your actual credentials.
+# JWT Configuration
+JWT_SECRET=your-very-long-and-secure-jwt-secret-key
 
-    ```properties
-    # Server Configuration
-    server.port=8080
+# Google Gemini AI
+GEMINI_API_KEY=your-gemini-api-key
 
-    # Database (PostgreSQL)
-    spring.datasource.url=${DB_URL}
-    spring.datasource.username=${DB_USER}
-    spring.datasource.password=${DB_PASS}
-    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-    spring.jpa.hibernate.ddl-auto=update
+# CORS Configuration
+CORS_ALLOWED_ORIGIN=http://localhost:5173
+```
 
-    # Security - JWT
-    spring.app.jwtSecret=${JWT_SECRET} # A long, random string for signing tokens
-    spring.app.jwtExpirationMs=3600000 # 1 hour
+## 🚀 Quick Start
 
-    # External APIs
-    gemini.api.key=${GEMINI_API_KEY}
-    gemini.api.url=[https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=](https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=)
-    ```
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd smart-email-reply-generator-backend
+```
 
-4.  **Run the application**
-    ```sh
-    mvn spring-boot:run
-    ```
+### 2. Install Dependencies
+```bash
+mvn clean install
+```
 
----
+### 3. Run the Application
+```bash
+mvn spring-boot:run
+```
 
-## 📖 API Usage & Screenshots
+The application will start on `http://localhost:8080`
 
-Here is a walkthrough of the API endpoints using Postman.
+## 📚 API Documentation
 
-### **1. User Registration (`/api/auth/signup`)**
+### Authentication Endpoints
 
-Create a new user by providing a username, password, and email.
+#### Register User
+```http
+POST /api/auth/signup
+Content-Type: application/json
 
-![User Registration](https://i.imgur.com/l54I9kM.png)
+{
+  "username": "testuser2",
+  "password": "password123",
+  "email": "testuser2@gmail.com"
+}
+```
 
-The user data is stored in the database with the password securely hashed.
+**Response**: 
+```json
+"User registered successfully"
+```
 
-![Database after registration](https://i.imgur.com/gYq8O2M.png)
+**Validation Rules**:
+- Username must be unique
+- Password minimum 6 characters
+- Email must be Gmail or Yahoo domain
+- Email must be unique
 
-### **2. User Login (`/api/auth/login`)**
+#### Login User
+```http
+POST /api/auth/login
+Content-Type: application/json
 
-Log in with the registered credentials to receive a JWT access token.
+{
+  "username": "testuser2",
+  "password": "password123"
+}
+```
 
-![User Login](https://i.imgur.com/vQx92D4.png)
+**Response**: 
+```json
+{
+  "jwtToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIi...",
+  "username": "testuser2"
+}
+```
 
-### **3. Generating an Email Reply (`/api/email/generate`)**
+**Rate Limit**: 10 requests per day per user
 
-Use the JWT token from the login step as a **Bearer Token** in the `Authorization` header for all protected endpoints.
+### Email Generation Endpoints
 
-![Setting Bearer Token](https://i.imgur.com/0F45c6E.png)
+#### Generate Email Reply
+```http
+POST /api/email/generate
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
 
-Send the email content and desired tone to the `/api/email/generate` endpoint to receive an AI-generated reply.
+{
+  "content": "Hi team, I will be out of office tomorrow due to a doctor's appointment. Please contact Sarah for any urgent matters.",
+  "tone": "formal"
+}
+```
 
-**Example 1: Professional Tone**
-![Generate Professional Email](https://i.imgur.com/eB93N9E.png)
+**Available Tones**:
+- `formal` - Professional and respectful
+- `urgent` - Direct and immediate
+- `professional` - Business-appropriate
+- `friendly` - Warm and approachable
 
-**Example 2: Formal Tone**
-![Generate Formal Email](https://i.imgur.com/C53z4g3.png)
+**Response Example**:
+```text
+Please be advised that I will be out of the office tomorrow, [Date], due to a pre-scheduled doctor's appointment.
 
-### **4. Data Masking in Action**
+For any urgent matters requiring immediate attention, please contact Sarah [Sarah's Last Name] at [Sarah's Email Address] or [Sarah's Phone Number].
 
-The API automatically masks sensitive information before processing. For example, an email address and Aadhaar number are hidden from the AI model.
+Thank you for your understanding.
+```
 
-![Data Masking Example](https://i.imgur.com/eXo58gP.png)
+**Rate Limit**: 4 requests per minute per user
 
-### **5. Security & Rate Limiting**
+#### Data Masking Example
+**Input with Sensitive Data**:
+```json
+{
+  "content": "Please send documents to testperson@example.com. My Aadhaar number is 123456789012.",
+  "tone": "urgent"
+}
+```
 
--   **Unauthorized Access**: Endpoints protected by JWT will return a `401 Unauthorized` error if no valid token is provided.
+The system automatically:
+1. Masks sensitive data before AI processing
+2. Processes the request with masked data
+3. Unmasks the data in the final response
 
-    ![Unauthorized Access](https://i.imgur.com/Gz5m4wH.png)
+### Health Check Endpoints
 
--   **Login Rate Limiting**: After 10 login attempts in a day, the API will block further requests from that user, returning a `429 Too Many Requests` error.
+#### Application Health
+```http
+GET /actuator/health
+```
 
-    ![Login Rate Limit Exceeded](https://i.imgur.com/f7jYy3T.png)
+**Response**:
+```json
+{
+  "status": "UP",
+  "groups": [
+    "liveness",
+    "readiness"
+  ]
+}
+```
 
--   **Email Generation Rate Limiting**: To prevent spam, the API limits users to 4 generation requests per minute.
+#### Application Info
+```http
+GET /actuator/info
+```
 
-    ![Email Generation Rate Limit Exceeded](https://i.imgur.com/2KkH2f7.png)
+#### Detailed Actuator (Authenticated)
+```http
+GET /actuator
+Authorization: Bearer <jwt-token>
+```
 
-### **6. Actuator Endpoints (Monitoring)**
+## 🔒 Security Features
 
-Publicly available actuator endpoints provide application health and information.
+### JWT Token Management
+- Tokens expire after 1 hour
+- Secure token generation with HMAC-SHA algorithm
+- Automatic token validation on protected endpoints
 
--   `/actuator/health`
-    ![Health Endpoint](https://i.imgur.com/1m048mG.png)
+### Data Protection
+- Sensitive data is never stored in logs
+- AI processing uses masked data only
+- Original data restored only in final response
 
--   `/actuator` (when authenticated)
-    ![Actuator Endpoint](https://i.imgur.com/l21Q668.png)
+### Rate Limiting Responses
+- **429 Status Code** when limits exceeded
+- **Login Limit**: "Login limit exceeded. Max 10 logins per day."
+- **Email Limit**: "Too many requests. Please try again later."
 
----
+## 🌐 CORS Configuration
+
+The application supports CORS for frontend integration:
+- Configurable allowed origins
+- Support for all standard HTTP methods
+- Credentials support enabled
+
+## 🐳 Deployment
+
+### Render.com Deployment
+The application is optimized for deployment on Render.com:
+
+1. Connect your GitHub repository
+2. Set environment variables in Render dashboard
+3. Deploy automatically on code changes
+
+### Environment-Specific Configuration
+- **Development**: H2 in-memory database support
+- **Production**: PostgreSQL with connection pooling
+- **Staging**: Full feature parity with production
+
+## 🧪 Testing
+
+### Manual Testing with Postman
+
+Import the following collection for comprehensive API testing:
+
+```json
+{
+  "info": {
+    "name": "Smart Email Writer API"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}"
+      }
+    ]
+  }
+}
+```
+
+### Test Scenarios
+
+1. **User Registration Flow**
+2. **Authentication and Token Generation**
+3. **Protected Endpoint Access**
+4. **Email Generation with Different Tones**
+5. **Rate Limiting Validation**
+6. **Data Masking Verification**
+7. **Health Check Monitoring**
+
+## 🔧 Configuration
+
+### Application Properties
+Key configuration options in `application.properties`:
+
+```properties
+# Server Configuration
+server.port=8080
+
+# Database
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# JWT
+spring.app.jwtExpirationMs=3600000
+
+# Gemini AI
+gemini.api.url=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=
+
+# Actuator
+management.endpoints.web.exposure.include=health,info
+```
+
+## 📊 Monitoring and Logging
+
+- **Health Checks**: `/actuator/health`
+- **Application Metrics**: Built-in Spring Boot metrics
+- **Structured Logging**: JSON format for production
+- **Error Tracking**: Comprehensive exception handling
 
 ## 🤝 Contributing
 
-Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Check the health endpoint for system status
+- Review logs for debugging information
+
+## 🚦 API Status Codes
+
+- **200 OK** - Successful request
+- **201 Created** - Resource created successfully
+- **400 Bad Request** - Invalid request data
+- **401 Unauthorized** - Authentication required
+- **429 Too Many Requests** - Rate limit exceeded
+- **500 Internal Server Error** - Server error
 
 ---
 
-## 📜 License
-
-Distributed under the MIT License. See `LICENSE` file for more information.
-
----
-
-## 📬 Contact
-
-Bhavesh - [bhavesh.work.23@gmail.com](mailto:bhavesh.work.23@gmail.com)
-
-Project Link: [https://github.com/Bhavesh232003/Smart-Email-Reply-Generator-Backend](https://github.com/Bhavesh232003/Smart-Email-Reply-Generator-Backend)
+**Built with ❤️ using Spring Boot and Google Gemini AI**
